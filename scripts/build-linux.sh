@@ -277,6 +277,13 @@ step3_patch_bundle() {
     auto "Running linux-deeplink.sh on $target_bundle"
     bash "$SCRIPT_DIR/patches/linux-deeplink.sh" "$target_bundle" \
       || warn "Deep-link patch failed -- see linux-deeplink.sh output above."
+    # The always-on Status window can end up invisible-but-click-eating (users
+    # report "middle of screen not clickable across all apps"). Insert a
+    # visibility watchdog in the 400 ms monitor-move interval that forces
+    # click-through whenever the window is hidden but not ignoring the mouse.
+    auto "Running status-window-mouse-vacuum.sh on $target_bundle"
+    bash "$SCRIPT_DIR/patches/status-window-mouse-vacuum.sh" "$target_bundle" \
+      || warn "Status-window mouse-vacuum patch failed -- see output above."
 
     # Renderer + preload patches live alongside the main bundle under .webpack/.
     local webpack_root="${target_bundle%/main/index.js}"
