@@ -284,6 +284,14 @@ step3_patch_bundle() {
     auto "Running status-window-mouse-vacuum.sh on $target_bundle"
     bash "$SCRIPT_DIR/patches/status-window-mouse-vacuum.sh" "$target_bundle" \
       || warn "Status-window mouse-vacuum patch failed -- see output above."
+    # Root cause of the same "dead zone" symptom: the Status window's alpha
+    # click-through poll requires an exact alpha=0 pixel (default threshold
+    # 0) to become click-through. Compositor rounding/anti-aliasing/backdrop
+    # blur almost never produces a literal 0, so the whole window rect stays
+    # input-capturing far more often than the vacuum-watchdog case above.
+    auto "Running status-window-alpha-threshold.sh on $target_bundle"
+    bash "$SCRIPT_DIR/patches/status-window-alpha-threshold.sh" "$target_bundle" \
+      || warn "Status-window alpha-threshold patch failed -- see output above."
 
     # Renderer + preload patches live alongside the main bundle under .webpack/.
     local webpack_root="${target_bundle%/main/index.js}"

@@ -24,29 +24,30 @@
 # -------------------------------------------------------
 # The Status window has a 400 ms monitor-move interval (identifiable by the
 # developer string "Window is destroyed, ignoring monitorMove interval"). We
-# insert a visibility watchdog at the top of that interval callback:
+# insert a watchdog at the top of that interval callback:
 #
 #   ee=async()=>{ if("active"!==D.RA.systemState)return; ... becomes
 #
 #   ee=async()=>{ ...original early-out... {/*WISPR_STATUS_VIS_BT*/const w=X.Y.statusWindow;
-#     w&&!w.isDestroyed()&&!w.isVisible()&&!w.ignoreMouseEvents()&&
-#     w.setIgnoreMouseEvents(!0,{forward:!0});} <original body continues>
+#     w&&!w.isDestroyed()&&!w.isAlwaysOnTop()&&w.setAlwaysOnTop(!0,"screen-saver");}
+#     <original body continues>
 #
 # A marker comment WISPR_STATUS_VIS_BT is left in the bundle so
 # verify-patches.sh can statically confirm the patch shipped.
 #
 # WHY THIS CANNOT REGRESS NORMAL OPERATION
 # ----------------------------------------
-# The watchdog only fires when the window is NOT visible AND currently
-# NOT ignoring the mouse (i.e. it is actively eating your clicks while
-# invisible). When the window is healthy:
-#   * visible  -> early-out (condition false, no behavior change);
-#   * hidden but already click-through -> early-out;
-#   * hidden and click-eating  -> this is precisely the bug; forcing
-#     {forward:!0} click-through restores clicks and matches what the
-#     BarHidden IPC handler (same file) already does when the bar hides:
-#     (0,O.iM)(W),statusWindow?.setIgnoreMouseEvents(!0).
-# It is also idempotent and self-healing: every 400 ms it re-checks.
+# Healthy window: isAlwaysOnTop() is true -> watchdog no-ops. Broken state: the compositor dropped always-on-top (XWayland quirk at
+#   sleep-wake / KVM switch), the bar renders invisible while STILL eating
+#   clicks. Their own log: error "Status window not visible
+#   {isAlwaysOnTop:false, isVisible:true}". Re-asserting
+#   setAlwaysOnTop(!0,"screen-saver") (the level the bundle itself uses for
+#   this window) re-anchors the bar. Idempotent + self-healing: re-checked
+#   every 400 ms. When healthy (isAlwaysOnTop true) the watchdog no-ops.
+#   NOTE: Electron has NO ignoreMouseEvents() getter (only
+#   setIgnoreMouseEvents) - the first rev probed it and threw
+#   "TypeError: w.ignoreMouseEvents is not a function" every tick
+#   (44 unhandled rejections); do not re-introduce that probe.
 #
 # Usage: patch-status-window-mouse-vacuum.sh <path-to-.webpack/main/index.js>
 #===============================================================================
@@ -106,8 +107,8 @@ wref = re.search(r'([\w$]+\.[\w$]+)\.statusWindow', seg).group(1)  # e.g. D.RA
 watchdog_wref = wref + ".statusWindow"
 inject = (
     "{/*" + MARKER + "*/const w=" + watchdog_wref + ";"
-    "w&&!w.isDestroyed()&&!w.isVisible()&&!w.ignoreMouseEvents()&&"
-    "w.setIgnoreMouseEvents(!0,{forward:!0});}"
+    "w&&!w.isDestroyed()&&!w.isAlwaysOnTop()&&"
+    "w.setAlwaysOnTop(!0,\"screen-saver\");}"
 )
 # NOTE: `const w` inside an async arrow that runs every 400 ms: evaluated each
 # tick, no closure leak. `Object.freeze` none; destructor-safe since we probe
@@ -137,4 +138,4 @@ PY
 if command -v node >/dev/null; then
   node --check "$BUNDLE" && echo "node --check OK"
 fi
-echo "Done: invisible-but-click-eating Status window now self-heals in <=400 ms."
+echo "Done: Status window always-on-top self-heal watchdog installed (400 ms)."
