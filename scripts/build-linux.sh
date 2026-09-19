@@ -277,6 +277,15 @@ step3_patch_bundle() {
     auto "Running linux-deeplink.sh on $target_bundle"
     bash "$SCRIPT_DIR/patches/linux-deeplink.sh" "$target_bundle" \
       || warn "Deep-link patch failed -- see linux-deeplink.sh output above."
+    # The Hub (main app) window cannot be dragged on Linux: it sets
+    # focusable:false, which causes Mutter to strip _NET_WM_ACTION_MOVE (and
+    # RESIZE/MINIMIZE/MAXIMIZE/CLOSE) from _NET_WM_ALLOWED_ACTIONS regardless
+    # of the movable:true hint -- confirmed via `xprop _NET_WM_ALLOWED_ACTIONS`
+    # A/B test against a normal window. Windows/macOS are unaffected by
+    # focusable:false in this way, so upstream never noticed on Linux.
+    auto "Running hub-window-movable-linux.sh on $target_bundle"
+    bash "$SCRIPT_DIR/patches/hub-window-movable-linux.sh" "$target_bundle" \
+      || warn "Hub-window movable patch failed -- see output above."
 
     # Renderer + preload patches live alongside the main bundle under .webpack/.
     local webpack_root="${target_bundle%/main/index.js}"
