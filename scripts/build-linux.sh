@@ -292,6 +292,15 @@ step3_patch_bundle() {
     auto "Running status-window-alpha-threshold.sh on $target_bundle"
     bash "$SCRIPT_DIR/patches/status-window-alpha-threshold.sh" "$target_bundle" \
       || warn "Status-window alpha-threshold patch failed -- see output above."
+    # Defense in depth: the alpha-threshold fix above still was not enough
+    # in the field (recurred live ~90 min after a clean restart, right after
+    # a dock/monitor hotplug -- exact trigger not fully understood). This
+    # adds a mechanism-agnostic hard guarantee: whatever caused a click to be
+    # swallowed, force the window back to click-through immediately after,
+    # bounding the bug to at most one swallowed click instead of indefinite.
+    auto "Running status-window-force-passthrough-on-click.sh on $target_bundle"
+    bash "$SCRIPT_DIR/patches/status-window-force-passthrough-on-click.sh" "$target_bundle" \
+      || warn "Status-window force-passthrough patch failed -- see output above."
 
     # Renderer + preload patches live alongside the main bundle under .webpack/.
     local webpack_root="${target_bundle%/main/index.js}"
