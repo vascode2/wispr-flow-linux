@@ -301,6 +301,23 @@ step3_patch_bundle() {
     auto "Running status-window-force-passthrough-on-click.sh on $target_bundle"
     bash "$SCRIPT_DIR/patches/status-window-force-passthrough-on-click.sh" "$target_bundle" \
       || warn "Status-window force-passthrough patch failed -- see output above."
+    # The self-heal above only fires on mouseDown (Electron's before-mouse-
+    # event filter for this window is hard-coded to mouseDown only), so a
+    # stuck alpha poll that only affects scroll input is never rescued.
+    # Confirmed live: dock-disconnect/KVM-switch reports of "clicking AND
+    # scrolling dies" outlive the mouseDown-only self-heal.
+    auto "Running status-window-wheel-passthrough.sh on $target_bundle"
+    bash "$SCRIPT_DIR/patches/status-window-wheel-passthrough.sh" "$target_bundle" \
+      || warn "Status-window wheel-passthrough patch failed -- see output above."
+    # The Context Menu window shares the same alpha-poll click-through
+    # mechanism but never got either self-heal above: its before-mouse-event
+    # listener only logs mouseDown and takes no corrective action. Its
+    # observed geometry (2559x1079, sized for a prior multi-monitor layout)
+    # covers nearly the whole screen once undocked to a single 1920x1080
+    # panel, making it the larger dead-zone risk of the two windows.
+    auto "Running context-menu-passthrough-on-click.sh on $target_bundle"
+    bash "$SCRIPT_DIR/patches/context-menu-passthrough-on-click.sh" "$target_bundle" \
+      || warn "Context-menu passthrough patch failed -- see output above."
     # The Hub (main app) window cannot be dragged on Linux: it sets
     # focusable:false, which causes Mutter to strip _NET_WM_ACTION_MOVE (and
     # RESIZE/MINIMIZE/MAXIMIZE/CLOSE) from _NET_WM_ALLOWED_ACTIONS regardless
