@@ -318,6 +318,16 @@ step3_patch_bundle() {
     auto "Running context-menu-passthrough-on-click.sh on $target_bundle"
     bash "$SCRIPT_DIR/patches/context-menu-passthrough-on-click.sh" "$target_bundle" \
       || warn "Context-menu passthrough patch failed -- see output above."
+    # A live test after a real dock-disconnect falsified the "bounded to one
+    # swallow" claim above: click AND scroll stayed dead until the process
+    # was killed. Root cause still unconfirmed (candidates: GPU/Viz
+    # compositor disruption -- capturePage has thrown UnknownVizError on
+    # this Intel+NVIDIA hybrid box at cold start; or a different explicit
+    # setIgnoreMouseEvents(false) call elsewhere in the state machine).
+    # Add ground-truth diagnostic capture instead of guessing a fourth fix.
+    auto "Running dead-zone-diagnostic-capture.sh on $target_bundle"
+    bash "$SCRIPT_DIR/patches/dead-zone-diagnostic-capture.sh" "$target_bundle" \
+      || warn "Dead-zone diagnostic patch failed -- see output above."
     # The Hub (main app) window cannot be dragged on Linux: it sets
     # focusable:false, which causes Mutter to strip _NET_WM_ACTION_MOVE (and
     # RESIZE/MINIMIZE/MAXIMIZE/CLOSE) from _NET_WM_ALLOWED_ACTIONS regardless
