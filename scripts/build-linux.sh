@@ -327,6 +327,14 @@ step3_patch_bundle() {
     auto "Running linux-main-shortcut-defaults.sh on $target_bundle"
     bash "$SCRIPT_DIR/patches/linux-main-shortcut-defaults.sh" "$target_bundle" \
       || warn "Shortcut-defaults patch failed -- see linux-main-shortcut-defaults.sh output above."
+    # Widen the Hub's existing "open at login + onboarding done -> skip the
+    # launch-time show" gate (already shipped, Windows-only) to Linux. The
+    # data it reads (prefs.user.openAtLogin/onboardingCompleted) is already
+    # written on every platform by the app's own new-user hook; only the
+    # isWindows platform read needs widening (issue #81).
+    auto "Running linux-hub-tray-at-login.sh on $target_bundle"
+    bash "$SCRIPT_DIR/patches/linux-hub-tray-at-login.sh" "$target_bundle" \
+      || warn "linux-hub-tray-at-login.sh failed -- see its output above."
 
     # Renderer + preload patches live alongside the main bundle under .webpack/.
     local webpack_root="${target_bundle%/main/index.js}"

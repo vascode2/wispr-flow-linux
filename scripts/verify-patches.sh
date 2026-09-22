@@ -16,6 +16,8 @@
 #     * linux-main-shortcut-defaults.sh -> Linux profiles seed the Windows
 #       default shortcut/push-to-talk map instead of the macOS one (whose
 #       PTT key has no Linux keycode)
+#     * linux-hub-tray-at-login.sh -> widen the Hub's open-at-login skip-show
+#       gate (Windows-only) to Linux
 #   renderer bundles:
 #     * linux-renderer-chrome.sh -> remaps the <html> platform class linux->win32
 #     * linux-renderer-treat-as-windows.sh -> widens each renderer's isWindows
@@ -57,6 +59,7 @@ MARKERS=(
   "early-singleton: second instance exits before init|F|WISPR_LINUX_EARLY_SINGLETON_V1"
   "disable-pill-drag: linux drag-overlay activation forced false|F|WISPR_LINUX_DISABLE_PILL_DRAG"
   "shortcut-defaults: linux seeds the Windows PTT map|F|WISPR_LINUX_MAIN_SHORTCUT_DEFAULTS"
+  "hub-tray-at-login: linux widens the open-at-login skip-show gate|F|WISPR_LINUX_HUB_TRAY_AT_LOGIN"
 )
 
 missing=0

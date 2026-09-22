@@ -12,6 +12,8 @@
 #   * helper-env.sh                      -> spreads process.env into the helper env
 #   * linux-disable-pill-drag.sh         -> force the drag-overlay flag false on Linux
 #   * linux-main-shortcut-defaults.sh   -> Linux seeds the Windows chord map in main
+#   * linux-hub-tray-at-login.sh        -> widen the Hub's open-at-login skip-show
+#                                          gate (Windows-only) to Linux
 #
 # The real bundle is the proprietary, gitignored app -- not available in CI -- so
 # each test drives a hermetic minified-JS FIXTURE carrying the exact anchor the
@@ -569,4 +571,49 @@ JS
 	[[ "$status" -ne 0 ]]
 	[[ "$output" == *'NOT ternary selections'* ]]
 	! grep -q 'WISPR_LINUX_MAIN_SHORTCUT_DEFAULTS' "$FIX"
+}
+
+# =============================================================================
+# linux-hub-tray-at-login.sh
+# =============================================================================
+
+@test "hub-tray-at-login: widens the isWindows read, leaves prefs and log text alone" {
+	cat > "$FIX" <<'JS'
+const c=()=>r.app.isPackaged?a.RA.prefs?.isUpdating?(s().info("x"),!1):process.argv.includes(o.v5)?(s().info("y"),!0):r.app.getLoginItemSettings().wasOpenedAtLogin?(s().info("z"),!1):o.H8&&a.RA.prefs?.user?.openAtLogin&&a.RA.prefs.user.onboardingCompleted?(s().info("Not showing hub window at launch: auto launch at login is enabled"),!1):(s().info("Showing hub window at launch: normal app launch"),!0):(s().info("Showing hub window at launch: dev app launch"),!0);
+JS
+	run bash "$PATCH_DIR/linux-hub-tray-at-login.sh" "$FIX"
+	[[ "$status" -eq 0 ]]
+	grep -q 'WISPR_LINUX_HUB_TRAY_AT_LOGIN' "$FIX"
+	grep -qF '(o.H8||"linux"===process.platform)/*WISPR_LINUX_HUB_TRAY_AT_LOGIN*/&&a.RA.prefs?.user?.openAtLogin&&a.RA.prefs.user.onboardingCompleted?(s().info("Not showing hub window at launch: auto launch at login is enabled"),!1)' "$FIX"
+	# the earlier wasOpenedAtLogin branch and --show-hub-at-launch check are untouched
+	grep -qF 'r.app.getLoginItemSettings().wasOpenedAtLogin?(s().info("z"),!1)' "$FIX"
+	grep -qF 'process.argv.includes(o.v5)?(s().info("y"),!0)' "$FIX"
+	node_check "$FIX"
+}
+
+@test "hub-tray-at-login: matches with different identifiers (re-minify churn)" {
+	cat > "$FIX" <<'JS'
+const g=()=>k.app.isPackaged?zz.RA.prefs?.isUpdating?(qq().info("x"),!1):process.argv.includes(nn.v5)?(qq().info("y"),!0):k.app.getLoginItemSettings().wasOpenedAtLogin?(qq().info("z"),!1):nn.H8&&zz.RA.prefs?.user?.openAtLogin&&zz.RA.prefs.user.onboardingCompleted?(qq().info("Not showing hub window at launch: auto launch at login is enabled"),!1):(qq().info("Showing hub window at launch: normal app launch"),!0):(qq().info("Showing hub window at launch: dev app launch"),!0);
+JS
+	run bash "$PATCH_DIR/linux-hub-tray-at-login.sh" "$FIX"
+	[[ "$status" -eq 0 ]]
+	grep -qF '(nn.H8||"linux"===process.platform)/*WISPR_LINUX_HUB_TRAY_AT_LOGIN*/&&zz.RA.prefs?.user?.openAtLogin&&zz.RA.prefs.user.onboardingCompleted?(qq().info("Not showing hub window at launch: auto launch at login is enabled"),!1)' "$FIX"
+	node_check "$FIX"
+}
+
+@test "hub-tray-at-login: idempotent on second run" {
+	cat > "$FIX" <<'JS'
+const c=()=>r.app.isPackaged?o.H8&&a.RA.prefs?.user?.openAtLogin&&a.RA.prefs.user.onboardingCompleted?(s().info("Not showing hub window at launch: auto launch at login is enabled"),!1):(s().info("y"),!0):(s().info("z"),!0);
+JS
+	bash "$PATCH_DIR/linux-hub-tray-at-login.sh" "$FIX"
+	assert_idempotent "$PATCH_DIR/linux-hub-tray-at-login.sh" "$FIX"
+}
+
+@test "hub-tray-at-login: bails non-zero when the gate is absent" {
+	cat > "$FIX" <<'JS'
+const c=()=>r.app.isPackaged?(s().info("Showing hub window at launch: normal app launch"),!0):(s().info("z"),!0);
+JS
+	run bash "$PATCH_DIR/linux-hub-tray-at-login.sh" "$FIX"
+	[[ "$status" -ne 0 ]]
+	! grep -q 'WISPR_LINUX_HUB_TRAY_AT_LOGIN' "$FIX"
 }

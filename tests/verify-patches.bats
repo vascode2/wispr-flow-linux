@@ -41,6 +41,7 @@ declare -gA MARKER_SAMPLES=(
 	[earlysingleton]='/*WISPR_LINUX_EARLY_SINGLETON_V1*/try{var __wisprApp=require("electron").app;if(__wisprApp&&!__wisprApp.requestSingleInstanceLock()){__wisprApp.quit(),process.exit(0)}}catch(__wisprErr){}'
 	[pilldrag]='re=e=>{e=(/*WISPR_LINUX_DISABLE_PILL_DRAG*/"linux"===process.platform)?!1:e}'
 	[shortcutdefaults]='(r.H8||"linux"===process.platform)/*WISPR_LINUX_MAIN_SHORTCUT_DEFAULTS*/?pe:ce'
+	[hubtrayatlogin]='(o.H8||"linux"===process.platform)/*WISPR_LINUX_HUB_TRAY_AT_LOGIN*/&&a.RA.prefs?.user?.openAtLogin&&a.RA.prefs.user.onboardingCompleted?(s().info("x"),!1):(s().info("y"),!0)'
 )
 
 # Write a fixture app.asar-like file containing every marker, except the one
