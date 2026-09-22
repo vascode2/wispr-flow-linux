@@ -337,15 +337,6 @@ step3_patch_bundle() {
     auto "Running hub-window-movable-linux.sh on $target_bundle"
     bash "$SCRIPT_DIR/patches/hub-window-movable-linux.sh" "$target_bundle" \
       || warn "Hub-window movable patch failed -- see output above."
-    # Electron's app.getLoginItemSettings().wasOpenedAtLogin (used by the
-    # Hub window's own "should I show at launch" gate) is macOS/Windows-only
-    # -- it always reads false on Linux, so every launch (autostart, manual,
-    # or the dead-zone workaround restarting the process) falls through to
-    # the unconditional "show" branch and pops the Hub window every time.
-    # Confirmed live via xwininfo immediately after a clean relaunch.
-    auto "Running hub-hidden-tray-only-linux.sh on $target_bundle"
-    bash "$SCRIPT_DIR/patches/hub-hidden-tray-only-linux.sh" "$target_bundle" \
-      || warn "Hub tray-only patch failed -- see output above."
 
     # Renderer + preload patches live alongside the main bundle under .webpack/.
     local webpack_root="${target_bundle%/main/index.js}"
