@@ -58,10 +58,16 @@ contract = {
     "Status notification show channel": Q + "notification:show" + Q,
     "Status notification clear channel": Q + "notification:clear" + Q,
     "Status window title": "title:" + Q + "Flow Status Indicator" + Q,
+    "Status surface report channel": Q + "status:reportAlphaCatchRects" + Q,
 }
 for label, pattern in contract.items():
     count = len(re.findall(pattern, src))
-    if count != 1:
+    # The idle-unmap shim already carries the report channel string, so after
+    # it runs this channel is expected at least once, not exactly once.
+    if label == "Status surface report channel":
+        if count < 1:
+            sys.exit(f"ERROR: upstream contract changed: {label} found 0 times.")
+    elif count != 1:
         sys.exit(f"ERROR: upstream contract changed: {label} found {count} times, expected 1.")
 
 first, nl, rest = src.partition("\n")

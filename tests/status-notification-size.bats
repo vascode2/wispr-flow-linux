@@ -11,6 +11,7 @@ main_fixture() {
 const w={title:"Flow Status Indicator"};
 const show="notification:show";
 const clear="notification:clear";
+const report="status:reportAlphaCatchRects";
 JS
 }
 
@@ -39,8 +40,17 @@ JS
 	cmp "$FIX.before" "$FIX"
 }
 
+@test "notification-size: refuses a bundle missing the surface report channel" {
+	printf 'const w={title:"Flow Status Indicator"};const show="notification:show";const clear="notification:clear";\n' > "$FIX"
+	cp "$FIX" "$FIX.before"
+	run bash "$PATCH_DIR/linux-status-notification-size.sh" "$FIX"
+	[[ $status -ne 0 ]]
+	cmp "$FIX.before" "$FIX"
+}
+
 @test "notification-size: refuses a bundle missing the Status title" {
-	printf 'const show="notification:show";const clear="notification:clear";\n' > "$FIX"
+	printf 'const show="notification:show";const clear="notification:clear";
+const report="status:reportAlphaCatchRects";\n' > "$FIX"
 	cp "$FIX" "$FIX.before"
 	run bash "$PATCH_DIR/linux-status-notification-size.sh" "$FIX"
 	[[ $status -ne 0 ]]
