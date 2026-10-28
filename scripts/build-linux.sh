@@ -399,6 +399,11 @@ step3_patch_bundle() {
     auto "Running linux-status-surface-report.sh on $status_renderer"
     bash "$SCRIPT_DIR/patches/linux-status-surface-report.sh" "$status_renderer" \
       || die "Status surface-report patch failed -- see output above."
+    # Remove the purple nudge pulsar the Status renderer keeps drawing while
+    # its nudge state stays eligible.
+    auto "Running linux-status-disable-nudge.sh on $status_renderer"
+    bash "$SCRIPT_DIR/patches/linux-status-disable-nudge.sh" "$status_renderer" \
+      || die "Status nudge-disable patch failed -- see output above."
     # Remap the <html> platform class linux->win32 so Linux adopts the tested
     # .win32 stylesheet (fixes the ~68px phantom window-control inset that shoved
     # the sidebar collapse toggle right and left the controls invisible).

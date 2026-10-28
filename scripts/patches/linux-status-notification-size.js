@@ -56,6 +56,13 @@
 		const state = {resting: null, active: false};
 		states.set(win, state);
 		const send = win.webContents.send.bind(win.webContents);
+		const setIgnore = win.setIgnoreMouseEvents.bind(win);
+		// The Status window is click-through on Linux; while a notification is
+		// visible the window must accept clicks so the card's buttons work.
+		win.setIgnoreMouseEvents = function (ignore, options) {
+			if (state.active) ignore = false;
+			return setIgnore(ignore, options);
+		};
 		win.webContents.send = function (channel, ...args) {
 			if (channel === SHOW) {
 				if (!state.active) {
@@ -63,10 +70,12 @@
 					state.active = true;
 				}
 				grow(win, state, sizeFor(args));
+				win.setIgnoreMouseEvents(false);
 			}
 			const result = send(channel, ...args);
 			if (channel === CLEAR && state.active) {
 				state.active = false;
+				win.setIgnoreMouseEvents(true, {forward: true});
 				restore(win, state);
 			}
 			return result;

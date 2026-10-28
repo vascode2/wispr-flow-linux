@@ -36,6 +36,7 @@
 #       bind so its consumers take the Windows branch on Linux (the bridge's
 #       platform.isWindows stays honest/false; no preload is touched)
 #     * linux-status-surface-report.sh -> semantic surfaces + initial report
+#     * linux-status-disable-nudge.sh -> remove the purple nudge pulsar
 #
 # The .asar container stores the JS bundle as concatenated plaintext, so a
 # byte-level grep over the packed file finds these markers without unpacking.
@@ -79,6 +80,7 @@ MARKERS=(
   "status-idle-unmap: linux native Status visibility|F|WISPR_LINUX_STATUS_IDLE_UNMAP"
   "status-notification-size: notifications fit the Status window|F|WISPR_LINUX_STATUS_NOTIFICATION_SIZE"
   "status-surface-report: linux semantic Status surfaces|F|WISPR_LINUX_STATUS_SURFACE_REPORT"
+  "status-disable-nudge: purple nudge pulsar removed|F|WISPR_LINUX_STATUS_DISABLE_NUDGE"
   "status-window-visibility: linux always-on-top watchdog|F|WISPR_LINUX_STATUS_VIS_WATCHDOG"
 )
 
