@@ -378,6 +378,11 @@ step3_patch_bundle() {
     auto "Running linux-status-idle-unmap.sh on $target_bundle"
     bash "$SCRIPT_DIR/patches/linux-status-idle-unmap.sh" "$target_bundle" \
       || die "Status idle-unmap patch failed -- see output above."
+    # Grow the Status window while a notification card is shown; the compact
+    # 200x110 pill window clips the 400x154 card.
+    auto "Running linux-status-notification-size.sh on $target_bundle"
+    bash "$SCRIPT_DIR/patches/linux-status-notification-size.sh" "$target_bundle" \
+      || die "Status notification-size patch failed -- see output above."
     # Re-assert always-on-top on the Status window's own 400 ms monitorMove
     # interval if the compositor ever drops it (observed at dictation
     # start/stop, sleep/resume, monitor/dock topology changes), including

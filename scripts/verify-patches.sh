@@ -25,6 +25,8 @@
 #     * linux-status-picker-anchor.sh -> status pill pickers anchored at
 #       the pill on native Wayland (status window bounds added in main)
 #     * linux-status-idle-unmap.sh -> native idle Status hide/show
+#     * linux-status-notification-size.sh -> grow the Status window for
+#       notification cards, restore the compact pill on clear
 #     * linux-status-window-visibility.sh -> re-asserts the Status window's
 #       always-on-top on its own monitorMove interval if the compositor
 #       drops it, including while idle between dictations
@@ -75,6 +77,7 @@ MARKERS=(
   "status-compact: linux status window shrunk to pill size|F|WISPR_LINUX_STATUS_COMPACT"
   "status-picker-anchor: pickers offset by the status window on Wayland|F|WISPR_LINUX_PICKER_ANCHOR"
   "status-idle-unmap: linux native Status visibility|F|WISPR_LINUX_STATUS_IDLE_UNMAP"
+  "status-notification-size: notifications fit the Status window|F|WISPR_LINUX_STATUS_NOTIFICATION_SIZE"
   "status-surface-report: linux semantic Status surfaces|F|WISPR_LINUX_STATUS_SURFACE_REPORT"
   "status-window-visibility: linux always-on-top watchdog|F|WISPR_LINUX_STATUS_VIS_WATCHDOG"
 )

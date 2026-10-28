@@ -46,6 +46,7 @@ declare -gA MARKER_SAMPLES=(
 	[statuscompact]='return(/*WISPR_LINUX_STATUS_COMPACT*/"linux"===process.platform)?{x:0}:{x:1}'
 	[pickeranchor]='(0,g.Bn)(A.RA.contextMenuWindow,d.qM.ShowAutoPolishPicker,/*WISPR_LINUX_PICKER_ANCHOR*/((p,b)=>b&&p?{...p}:p)(e,b))'
 	[statusidle]='/*WISPR_LINUX_STATUS_IDLE_UNMAP*/'
+	[statusnotificationsize]='/*WISPR_LINUX_STATUS_NOTIFICATION_SIZE*/'
 	[statussurface]='/*WISPR_LINUX_STATUS_SURFACE_REPORT*/'
 	[statuswindowvis]='ke=async()=>{/*WISPR_LINUX_STATUS_VIS_WATCHDOG*/{const w=u.RA.statusWindow;w&&!w.isDestroyed()&&!w.isAlwaysOnTop()&&w.setAlwaysOnTop(!0,"screen-saver");}if("active"!==u.RA.systemState)return;const e=performance.now();if(u.RA.statusWindow&&!u.RA.statusWindow.isDestroyed())try{}}'
 )
