@@ -24,6 +24,11 @@ Flow app version is tracked separately by the `+wispr{X.Y.Z}` suffix.
 
 ### Fixed
 
+- The Linux Status pill re-asserts always-on-top on its own 400 ms
+  monitorMove tick, including between dictations while idle, so a
+  compositor that drops the level no longer leaves the pill behind other
+  windows (refs #71). It does not change click-through; that half of #71
+  stays open.
 - Wispr Flow 1.6.1264 builds again, so the nightly bump can move the pin
   past 1.6.1209 (#135). Upstream reshaped three patch sites while keeping
   their literals: the cold-start deep-link guard now ends a comma sequence,

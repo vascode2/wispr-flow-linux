@@ -25,6 +25,9 @@
 #     * linux-status-picker-anchor.sh -> status pill pickers anchored at
 #       the pill on native Wayland (status window bounds added in main)
 #     * linux-status-idle-unmap.sh -> native idle Status hide/show
+#     * linux-status-window-visibility.sh -> re-asserts the Status window's
+#       always-on-top on its own monitorMove interval if the compositor
+#       drops it, including while idle between dictations
 #   renderer bundles:
 #     * linux-renderer-chrome.sh -> remaps the <html> platform class linux->win32
 #     * linux-renderer-treat-as-windows.sh -> widens each renderer's isWindows
@@ -73,6 +76,7 @@ MARKERS=(
   "status-picker-anchor: pickers offset by the status window on Wayland|F|WISPR_LINUX_PICKER_ANCHOR"
   "status-idle-unmap: linux native Status visibility|F|WISPR_LINUX_STATUS_IDLE_UNMAP"
   "status-surface-report: linux semantic Status surfaces|F|WISPR_LINUX_STATUS_SURFACE_REPORT"
+  "status-window-visibility: linux always-on-top watchdog|F|WISPR_LINUX_STATUS_VIS_WATCHDOG"
 )
 
 missing=0

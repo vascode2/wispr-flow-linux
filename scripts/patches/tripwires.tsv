@@ -47,6 +47,7 @@ linux-status-idle-unmap	main	F	1	the Status rectangle IPC channel	status:reportA
 linux-status-idle-unmap	main	P	1	the Status background-throttling config	[`"']status[`"'],[`"']preload\.js[`"']\),backgroundThrottling:!1
 linux-status-surface-report	renderer/status	F	1	the semantic flow-bar hot area	flow-bar-hot-area
 linux-status-surface-report	renderer/status	F	1	the visual-surface remeasure event	status-window-shape-remeasure
+linux-status-window-visibility	main	F	1	the monitorMove interval's destroyed-callback log line	ignoring monitorMove interval
 linux-renderer-chrome	renderer/hub	F	2	the platform class added to <html>	classList.add(window.electron.platform.os)
 linux-renderer-treat-as-windows	renderer/*	F	1+	the per-renderer isWindows bind	platform?.isWindows??!1
 # linux-status-compact: the centred-bottom return matches once in 1.6.1209
