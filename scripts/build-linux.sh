@@ -412,6 +412,11 @@ step3_patch_bundle() {
       auto "Running linux-renderer-chrome.sh on $hub_renderer"
       bash "$SCRIPT_DIR/patches/linux-renderer-chrome.sh" "$hub_renderer" \
         || die "Renderer-chrome patch failed -- see linux-renderer-chrome.sh output above."
+      # Notetaker system audio is macOS/Windows-only; skip it on Linux so the
+      # meeting records mic-only instead of showing a capture error.
+      auto "Running linux-notetaker-mic-only.sh on $hub_renderer"
+      bash "$SCRIPT_DIR/patches/linux-notetaker-mic-only.sh" "$hub_renderer" \
+        || die "Notetaker mic-only patch failed -- see output above."
     else
       die "Hub renderer bundle not found at $hub_renderer (its marker is required)."
     fi

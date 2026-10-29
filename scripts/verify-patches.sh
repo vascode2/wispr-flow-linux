@@ -37,6 +37,7 @@
 #       platform.isWindows stays honest/false; no preload is touched)
 #     * linux-status-surface-report.sh -> semantic surfaces + initial report
 #     * linux-status-disable-nudge.sh -> remove the purple nudge pulsar
+#     * linux-notetaker-mic-only.sh -> skip system audio capture on Linux
 #
 # The .asar container stores the JS bundle as concatenated plaintext, so a
 # byte-level grep over the packed file finds these markers without unpacking.
@@ -81,6 +82,7 @@ MARKERS=(
   "status-notification-size: notifications fit the Status window|F|WISPR_LINUX_STATUS_NOTIFICATION_SIZE"
   "status-surface-report: linux semantic Status surfaces|F|WISPR_LINUX_STATUS_SURFACE_REPORT"
   "status-disable-nudge: purple nudge pulsar removed|F|WISPR_LINUX_STATUS_DISABLE_NUDGE"
+  "notetaker-mic-only: system audio capture skipped on Linux|F|WISPR_LINUX_NOTETAKER_MIC_ONLY"
   "status-window-visibility: linux always-on-top watchdog|F|WISPR_LINUX_STATUS_VIS_WATCHDOG"
 )
 

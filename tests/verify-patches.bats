@@ -49,6 +49,7 @@ declare -gA MARKER_SAMPLES=(
 	[statusnotificationsize]='/*WISPR_LINUX_STATUS_NOTIFICATION_SIZE*/'
 	[statussurface]='/*WISPR_LINUX_STATUS_SURFACE_REPORT*/'
 	[statusdisablenudge]='/*WISPR_LINUX_STATUS_DISABLE_NUDGE*/'
+	[notetakermiconly]='/*WISPR_LINUX_NOTETAKER_MIC_ONLY*/'
 	[statuswindowvis]='ke=async()=>{/*WISPR_LINUX_STATUS_VIS_WATCHDOG*/{const w=u.RA.statusWindow;w&&!w.isDestroyed()&&!w.isAlwaysOnTop()&&w.setAlwaysOnTop(!0,"screen-saver");}if("active"!==u.RA.systemState)return;const e=performance.now();if(u.RA.statusWindow&&!u.RA.statusWindow.isDestroyed())try{}}'
 )
 

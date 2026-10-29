@@ -59,3 +59,4 @@ linux-status-notification-size	main	P	1	the status notification clear channel	[`
 linux-status-notification-size	main	P	1	the native Status constructor title	title:[`"']Flow Status Indicator[`"']
 linux-status-disable-nudge	renderer/status	F	1	the status-bubble nudge pulsar	anchorName:"--status-bubble",size:"small",position:"center"
 linux-status-notification-size	main	F	1	the Status surface report channel	status:reportAlphaCatchRects
+linux-notetaker-mic-only	renderer/hub	F	1	the meeting system capture method	static async startMeetingSystemCapture(
